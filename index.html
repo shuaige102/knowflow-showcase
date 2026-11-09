@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="KnowFlow 是基于 Agentic RAG 与 MCP 的企业知识助手。观看一段真实问答演示，查看原文引用、缺证追问和评测记录。">
+  <meta name="theme-color" content="#f5f1e7">
+  <title>KnowFlow 企业知识助手 · AI 作品</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="site.css">
+</head>
+<body>
+  <a class="skip" href="#main">跳到作品内容</a>
+  <header class="masthead wrap">
+    <a class="wordmark" href="#" aria-label="KnowFlow 作品页首页">KnowFlow<span aria-hidden="true">.</span></a>
+    <nav aria-label="作品目录">
+      <a href="#demo">演示</a>
+      <a href="#build">实现</a>
+      <a href="#evaluation">评测</a>
+    </nav>
+  </header>
+  <main id="main" class="wrap">
+    <section class="hero" aria-labelledby="title">
+      <div class="intro">
+        <p class="eyebrow"><span></span>AI 个人作品</p>
+        <h1 id="title">KnowFlow<br><span>企业知识助手</span></h1>
+        <p class="lede">跨制度问答可点引用核对原文。遇到个人审批追问，明确说明缺少哪条记录。</p>
+        <p class="stack">Agentic RAG <b aria-hidden="true">·</b> MCP <b aria-hidden="true">·</b> Evaluation</p>
+        <a class="primary" href="#demo">观看 91 秒演示 <span aria-hidden="true">↓</span></a>
+      </div>
+      <figure id="demo" class="demo">
+        <div class="player">
+          <video id="demo-video" controls playsinline preload="none" poster="media/demo-cover.png" aria-label="KnowFlow 项目演示">
+            <source src="media/knowflow-demo.mp4" type="video/mp4">
+            <p>可以打开 <a href="media/knowflow-demo.mp4">MP4 演示视频</a>。</p>
+          </video>
+          <button id="play-cover" class="play-cover" type="button" aria-controls="demo-video" hidden>
+            <img src="media/demo-cover.png" width="1920" height="1080" alt="">
+            <span class="play-label">
+              <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><path d="M6 4v12l10-6z" fill="currentColor"/></svg>
+              播放演示 <span class="duration">1:31</span>
+            </span>
+          </button>
+        </div>
+        <figcaption>
+          <span>2026.11.07 真实对话重演，等待已压缩</span>
+          <a href="media/knowflow-demo.mp4">打开 MP4 ↗</a>
+        </figcaption>
+      </figure>
+    </section>
+
+    <section class="section case" aria-labelledby="case-title">
+      <div class="section-heading">
+        <p class="eyebrow">01 / 演示案例</p>
+        <h2 id="case-title">从制度问到实际审批</h2>
+        <p>同一个会话先查询规则，再追问上一周提交的申请。两问需要的证据不同。</p>
+      </div>
+      <div class="case-grid">
+        <div class="turns">
+          <article class="turn">
+            <p class="tag">第一问 · 制度检索</p>
+            <h3>模型准入批准能替代 D1 数据使用授权吗？D1 数据使用由谁批准？</h3>
+            <p>两种授权分别成立。数据责任人核对资料来源、分级和使用范围，申请人不得自批。引用可分别回到模型准入和数据授权制度。</p>
+          </article>
+          <article class="turn">
+            <p class="tag">追问 · 实际状态</p>
+            <h3>我上周提交的 D1 数据使用申请，现在批准了吗？</h3>
+            <p>缺少这笔申请的实际审批记录，当前无法确认。刷新后可以继续查看两轮回答和来源。</p>
+          </article>
+        </div>
+        <figure class="evidence">
+          <a href="media/source-review.png" aria-label="查看引用原文截图大图">
+            <img src="media/source-review.png" width="1440" height="1000" loading="lazy" alt="KnowFlow 实际演示网页中点开回答引用后显示的制度原文">
+          </a>
+          <figcaption>打开回答引用后显示对应原文。点击截图查看大图。</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="build" class="section" aria-labelledby="build-title">
+      <div class="section-heading">
+        <p class="eyebrow">02 / 技术实现</p>
+        <h2 id="build-title">回答依据如何保留下来</h2>
+        <p>LangGraph 判断请求需要知识检索、工具还是实际记录。演示的首问走下面这条知识问答路径。</p>
+      </div>
+      <ol class="pipeline" aria-label="知识问答路径">
+        <li><small>01</small><strong>混合检索</strong><span>向量与 BM25 召回</span></li>
+        <li><small>02</small><strong>重排与选段</strong><span>按问题相关性选择依据</span></li>
+        <li><small>03</small><strong>MCP 原文核验</strong><span>读取来源并绑定引用</span></li>
+        <li><small>04</small><strong>生成与审核</strong><span>先展示待核验预览，审核后发布答案</span></li>
+      </ol>
+      <div class="contribution">
+        <h3>个人工作</h3>
+        <p>基于开源检索底座二次开发，在 AI 辅助下完成制度资料接入、证据传递和工具路由。修复工具正文在观测记录中被截断的问题，使评测能按同一次执行核对工具回执。用 FastAPI、SSE 和 SQLite 完成多轮问答、引用定位和会话恢复。</p>
+      </div>
+    </section>
+
+    <section id="evaluation" class="section results" aria-labelledby="evaluation-title">
+      <div class="section-heading">
+        <p class="eyebrow">03 / 评测记录</p>
+        <h2 id="evaluation-title">执行与评分分别记录</h2>
+        <p>一轮真实评测使用 5 个公开自拟案例。独立模型评审完成 3 题，另外 2 题超时。完整独立质量与性能验收仍有未完成项。</p>
+      </div>
+      <dl class="counts">
+        <div><dt>用例执行完成</dt><dd>5</dd></div>
+        <div><dt>完成评分</dt><dd>3</dd></div>
+        <div><dt>评审超时</dt><dd>2</dd></div>
+      </dl>
+      <details>
+        <summary>查看评测平台截图</summary>
+        <figure>
+          <a href="media/evaluation.png" aria-label="查看评测平台截图大图">
+            <img src="media/evaluation.png" width="1440" height="1000" loading="lazy" alt="独立评测平台显示五个用例及评分覆盖情况">
+          </a>
+          <figcaption>图中任务成功率按已评分的 3 题计算。原实验保留超时和缺失指标。</figcaption>
+        </figure>
+      </details>
+    </section>
+  </main>
+  <footer class="wrap footer">
+    <strong>KnowFlow</strong>
+    <span>个人二次开发项目 · 9 篇原创模拟制度 · 83 个知识片段</span>
+  </footer>
+  <script>
+    const video = document.getElementById("demo-video");
+    const cover = document.getElementById("play-cover");
+    video.hidden = true;
+    cover.hidden = false;
+    cover.addEventListener("click", () => {
+      cover.hidden = true;
+      video.hidden = false;
+      video.focus();
+      video.play().catch(() => video.focus());
+    });
+  </script>
+</body>
+</html>
